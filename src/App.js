@@ -32,6 +32,16 @@ function App() {
     setTodos(newTodos);
   }
 
+  const toggleTodo = (id) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { id: todo.id, text: todo.text, completed: !todo.completed };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  }
+
   return (
     <div className='App'>
       <h1>To-Do List</h1>
@@ -39,7 +49,7 @@ function App() {
         <input type="text" />
         <button>Add</button>
       </form>
-        <TodoList todos={todos} deleteTodo={deleteTodo} />
+        <TodoList todos={todos} deleteTodo={deleteTodo} toggleTodo={toggleTodo} />
     </div>
   );
 }
