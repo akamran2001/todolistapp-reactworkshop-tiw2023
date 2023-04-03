@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
+import TodoList from './Todolist';
 
 function getTodosFromLocalStorage() {
   const todos = localStorage.getItem('todos');
@@ -11,6 +12,7 @@ function getTodosFromLocalStorage() {
 
 function App() {
   const [todos, setTodos] = useState(getTodosFromLocalStorage())
+  const [idCount, setIdCount] = useState(0);
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -18,14 +20,15 @@ function App() {
 
   const addTodo = (event) => {
     event.preventDefault();
-    const newTodo = event.target.elements[0].value;
+    const newTodoText = event.target.elements[0].value;
+    const newTodo = { id: idCount, text: newTodoText, completed: false };
+    setIdCount(idCount + 1);
     setTodos([...todos, newTodo]);
     event.target.reset();
   }
 
-  const deleteTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
+  const deleteTodo = (id) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
   }
 
@@ -36,14 +39,7 @@ function App() {
         <input type="text" />
         <button>Add</button>
       </form>
-      <ul>
-        {todos.map((todo, index) => (
-          <li key={index}>
-            {todo}
-            <button onClick={() => deleteTodo(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+        <TodoList todos={todos} deleteTodo={deleteTodo} />
     </div>
   );
 }
